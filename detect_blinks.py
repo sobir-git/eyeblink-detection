@@ -12,7 +12,7 @@ import cv2
 
 from blink_detector import BlinkDetector
 from datalogger import DataLogger
-from eye_metrics import eye_aspect_ratio, AreaDistanceRatio, VerticalDistance
+from eye_metrics import eye_aspect_ratio, AreaDistanceRatio
 
 # construct the argument parse and parse the arguments
 ap = argparse.ArgumentParser()
@@ -22,10 +22,6 @@ ap.add_argument("-v", "--video", type=str, default="camera",
                 help="path to input video file")
 ap.add_argument("-g", "--graph",  action='store_true',
                 help="show graph")
-ap.add_argument("-t", "--threshold", type=float, default=0.2,
-                help="threshold to determine closed eyes")
-ap.add_argument("-f", "--frames", type=int, default=2,
-                help="the number of consecutive frames the eye must be below the threshold")
 ap.add_argument("-o", "--output-file", type=str, default=None,
                 help="the output file where collected metrics will be stored")
 

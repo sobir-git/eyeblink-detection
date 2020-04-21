@@ -2,7 +2,7 @@ import scipy.signal
 import numpy as np
 import matplotlib.pyplot as plt
 
-from signal_preprocessing import MedianFilter, SGFilter, MedianBaselineCorrector
+from signal_preprocessing import SGFilter, MedianBaselineCorrector
 
 
 class PeakFinder():
@@ -31,11 +31,10 @@ def plot_peaks(peaks, props, x, y, axes=None):
 class BlinkDetector:
     peak_finder = PeakFinder(prominence=0.03, wlen=29, width=(3, 16))
     preprocessors = [
-        # MedianFilter(filtersize=7),
         SGFilter(window_length=7, polyorder=2),
         MedianBaselineCorrector(med_bc_window_length=31)
     ]
-    _update_plot_every = 5
+    _update_plot_every = 10
     _plot_update_cnt = 0
 
     def __init__(self, time_window=2.0, frame_delay=5, plot=True):
