@@ -23,19 +23,14 @@ cd eyeblink-detection/
 ```
 
 ## 3. Install requirements.txt
-You can optionally create virual environment first
 ```bash
-# optional
 python3 -m venv env
 . env/bin/activate
+python -m pip install -r requirements.txt
 ```
 
-Then run
-```
-pip3 -m pip install -r requirements.txt
-```
-
-# 4. Run
+## 4. Run
 ```bash
-python3 detect_blinks.py
+python detect_blinks.py
 ```
+
