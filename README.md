@@ -73,3 +73,26 @@ docker run -it \
     eyeblink-detection:latest
 ```
 
+
+# How it works
+
+It takes the facial landmarks using dlib library. It computes eye-area-over-distance metric which is
+the technically the average of square roots of both eye areas divided by the distance between them.
+
+![adr-measures](https://user-images.githubusercontent.com/34193118/79987710-716b6780-84b6-11ea-8d2a-973e31c0b846.png)
+
+Mathematically computed as 
+```
+ADR = (sqrt(S1) + sqrt(S2)) / (2*d)
+```
+where `S1` and `S2` are the areas of the left and right eyes and `d` is the distance between the centers of the two eyes.
+
+We apply some preprocessing this ADR metric:
+    - SG smoothing
+    - Baseline correction
+Then we run a peak finding algorithm to locate specific peaks. The peak finding algorithms is controlled by 
+parameters such as `prominence` and `peak_width`. Using the parameter `peak_width` we will control filter out
+*super-fast eyeblinks* which can appear as a result of noise, as well as we filter out *super-long eyeblinks* 
+which can happen when person just closes his eyes and is drowsy. Here is snapshot of the metrics and peak
+detection in action (show if run with `-g` flag):
+![graph](https://user-images.githubusercontent.com/34193118/79990247-7e3d8a80-84b9-11ea-875e-5af1ddf10bd8.png)
