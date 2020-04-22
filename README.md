@@ -88,11 +88,13 @@ ADR = (sqrt(S1) + sqrt(S2)) / (2*d)
 where `S1` and `S2` are the areas of the left and right eyes and `d` is the distance between the centers of the two eyes.
 
 We apply some preprocessing this ADR metric:
-    - SG smoothing
-    - Baseline correction
-Then we run a peak finding algorithm to locate specific peaks. The peak finding algorithms is controlled by 
-parameters such as `prominence` and `peak_width`. Using the parameter `peak_width` we will control filter out
-*super-fast eyeblinks* which can appear as a result of noise, as well as we filter out *super-long eyeblinks* 
-which can happen when person just closes his eyes and is drowsy. Here is snapshot of the metrics and peak
+- SG smoothing (using [Savitzky–Golay filter](https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter))
+- Baseline correction (by running a median filter and then subtracting it from the signal)
+
+Then we run a peak finding algorithm to locate specific peaks. For this we use Scipy's `scipy.signal.find_peaks`
+function. The peak finding algorithm is controlled by parameters such as `prominence` and `peak_width`. 
+Using the parameter `peak_width` we will control filter out *super-fast eyeblinks* which occure in <100ms duration 
+as a result of noise in the data, as well as we filter out *super-long eyeblinks* 
+which can happen when one is drowsy and closes eyes for longer time (>500ms). Here is snapshot of the metrics and peak
 detection in action (show if run with `-g` flag):
 ![graph](https://user-images.githubusercontent.com/34193118/79990247-7e3d8a80-84b9-11ea-875e-5af1ddf10bd8.png)
