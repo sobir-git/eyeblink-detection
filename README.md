@@ -1,5 +1,8 @@
 # eyeblink-detection
 
+![screenshot-eyeblink](https://user-images.githubusercontent.com/34193118/79985450-4af7fd00-84b3-11ea-9b0c-143741f65adb.png)
+
+
 # How to run
 There are two options. With an without Docker.
 
