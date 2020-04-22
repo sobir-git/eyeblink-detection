@@ -65,6 +65,8 @@ Wait for some time. It may take 5-10 minutes.
 Run the following command, giving the container specific access to webcam and X11 desktop.
 
 ```bash
+xhost +
+
 docker run -it \
     --env="DISPLAY" \
     --env="QT_X11_NO_MITSHM=1" \
