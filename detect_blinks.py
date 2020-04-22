@@ -27,11 +27,18 @@ ap.add_argument("-o", "--output-file", type=str, default=None,
 
 
 class FPSCounter:
+    ''' 
+    Frame counter class used to calculate fps (frame per second)
+    live
+    '''
     def __init__(self):
         self._last_tick_time = time.time()
         self._fps = 0
 
     def tick(self):
+        ''' This function should be called on every frame 
+        it will update its interal fps attribute according the 
+        time difference to previous frame'''
         now = time.time()
         dt = now - self._last_tick_time
         self._fps = round(1 / dt)
@@ -39,11 +46,14 @@ class FPSCounter:
         return self._fps
 
     def get_fps(self):
+        ''' Returns the fps (frame rate)'''
         return self._fps
 
 
 def main():
     args = vars(ap.parse_args())
+
+    # create frame counter
     fps_counter = FPSCounter()
 
     # total number of blinks
@@ -73,7 +83,7 @@ def main():
         fps = vs.stream.get(cv2.CAP_PROP_FPS)
 
     # create dataloggers
-    datalogger = DataLogger(columns=['ear', 'adr', 'vd'])
+    datalogger = DataLogger(columns=['ear', 'adr'])
 
     # blink detector
     blink_detector = BlinkDetector(time_window=5,
@@ -98,13 +108,14 @@ def main():
             timestamp = time.time() - INIT_TIME
             fps = fps_counter.tick()
 
-        # it, and convert it to grayscale channels)
+        # get the new frame
         frame = vs.read()
         frame_cnt += 1
         if frame is None:
             break
 
         frame = imutils.resize(frame, width=450)
+        # it, and convert it to grayscale channels)
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         # detect faces in the grayscale frame
@@ -126,11 +137,14 @@ def main():
             leftEAR = eye_aspect_ratio(leftEye)
             rightEAR = eye_aspect_ratio(rightEye)
 
+            # compute the area-over-distance metric
             adr = AreaDistanceRatio.compute(leftEye, rightEye)
+            # log ADR
             datalogger.log(adr, 'adr', timestamp)
 
             # average the eye aspect ratio together for both eyes
             ear = (leftEAR + rightEAR) / 2.0
+            # log EAR
             datalogger.log(ear, 'ear', timestamp)
 
             # compute the convex hull for the left and right eye, then
@@ -140,6 +154,7 @@ def main():
             cv2.drawContours(frame, [leftEyeHull], -1, (0, 255, 0), 1)
             cv2.drawContours(frame, [rightEyeHull], -1, (0, 255, 0), 1)
 
+            # send new data to blink detector and check if it detected new blinks
             blink_detector.send(adr, timestamp)
             blink = blink_detector.get_blink()
             if blink is not None:
