@@ -1,0 +1,8 @@
+dlib==19.19.0
+jupyter==1.0.0
+matplotlib==3.2.1
+numpy==1.18.3
+opencv-python==4.2.0.34
+pandas==1.0.3
+scipy==1.4.1
+imutils
