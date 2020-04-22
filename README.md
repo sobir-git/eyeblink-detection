@@ -23,6 +23,8 @@ cd eyeblink-detection/
 ```
 
 ## 3. Install requirements.txt
+We are creating a virtual environment and installing the required python packages (mainly dlib, opencv, scipy).
+
 ```bash
 python3 -m venv env
 . env/bin/activate
@@ -32,5 +34,10 @@ python -m pip install -r requirements.txt
 ## 4. Run
 ```bash
 python detect_blinks.py
+```
+
+You can add `-g` flag to display the graph of metrics.
+```bash
+python -g detect_blinks.py
 ```
 
