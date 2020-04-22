@@ -1,6 +1,8 @@
 # eyeblink-detection
 
 # How to run
+There are two options. With an without Docker.
+
 
 ## 1. Install requirements
 
@@ -39,5 +41,32 @@ python detect_blinks.py
 You can add `-g` flag to display the graph of metrics.
 ```bash
 python -g detect_blinks.py
+```
+
+
+# Run using Docker
+
+## 1. Clone the repo
+```bash
+git clone https://github.com/sobir-git/eyeblink-detection
+cd eyeblink-detection/
+```
+
+## 2. Build docker image
+```bash
+docker build -t eyeblink-detection:latest .
+```
+Wait for some time. It may take 5-10 minutes.
+
+## 3. Run docker image
+Run the following command, giving the container specific access to webcam and X11 desktop.
+
+```bash
+docker run -it \
+    --env="DISPLAY" \
+    --env="QT_X11_NO_MITSHM=1" \
+    --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
+    --device=/dev/video0:/dev/video0 \
+    eyeblink-detection:latest
 ```
 

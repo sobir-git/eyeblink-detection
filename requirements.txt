@@ -5,4 +5,5 @@ numpy==1.18.3
 opencv-python==4.2.0.34
 pandas==1.0.3
 scipy==1.4.1
-imutils
+imutils >= 0.4
+numpy >= 1.0
