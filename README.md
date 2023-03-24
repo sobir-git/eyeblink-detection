@@ -1,13 +1,19 @@
 # eyeblink-detection
 
+Welcome to eyeblink-detection, a small Python project that uses facial landmarks and mathematical calculations to detect eyeblinks. The project provides two options for running it: locally with Python or with Docker. It also includes a peak-finding algorithm to locate specific peaks and parameters to filter out noise and longer eyeblinks.
+
+
+
 ![screenshot-eyeblink](https://user-images.githubusercontent.com/34193118/79985450-4af7fd00-84b3-11ea-9b0c-143741f65adb.png)
 
 
-# How to run
-There are two options. With an without Docker.
 
+# How to Run
+There are two options for running the eyeblink detection program: with or without Docker.
 
-## 1. Install requirements
+## Option 1: Without Docker
+
+1. Install the required packages by running the following commands:
 
 ```bash
 apt-get update
@@ -21,14 +27,13 @@ python3 python3-dev python3-pip
 pip3 install --upgrade pip
 ```
 
-## 2. Clone the repo
+2. Clone the repository and navigate to the directory:
 ```bash
 git clone https://github.com/sobir-git/eyeblink-detection
 cd eyeblink-detection/
 ```
 
-## 3. Install requirements.txt
-We are creating a virtual environment and installing the required python packages (mainly dlib, opencv, scipy).
+3. Create a virtual environment and install the required Python packages:
 
 ```bash
 python3 -m venv env
@@ -36,34 +41,30 @@ python3 -m venv env
 python -m pip install -r requirements.txt
 ```
 
-## 4. Run
+4. Run the program:
 ```bash
 python detect_blinks.py
 ```
 
-You can add `-g` flag to display the graph of metrics.
+You can add the -g flag to display the graph of metrics:
 ```bash
 python -g detect_blinks.py
 ```
 
 
-# Run using Docker
+## Option 2: With Docker
 
-## 1. Clone the repo
+1. Clone the repository and navigate to the directory:
 ```bash
 git clone https://github.com/sobir-git/eyeblink-detection
 cd eyeblink-detection/
 ```
-
-## 2. Build docker image
+2. Build the Docker image:
 ```bash
 docker build -t eyeblink-detection:latest .
 ```
-Wait for some time. It may take 5-10 minutes.
 
-## 3. Run docker image
-Run the following command, giving the container specific access to webcam and X11 desktop.
-
+3. Run the Docker container with specific access to webcam and X11 desktop:
 ```bash
 xhost +
 
@@ -75,28 +76,26 @@ docker run -it \
     eyeblink-detection:latest
 ```
 
+# How It Works
+The eyeblink detection program takes facial landmarks using the dlib library and computes the eye-area-over-distance metric.
 
-# How it works
-
-It takes the facial landmarks using dlib library. It computes eye-area-over-distance metric which is
-the technically the average of square roots of both eye areas divided by the distance between them.
 
 ![adr-measures](https://user-images.githubusercontent.com/34193118/79987710-716b6780-84b6-11ea-8d2a-973e31c0b846.png)
 
-Mathematically computed as 
+Mathematically, it is computed as:
 ```
 ADR = (sqrt(S1) + sqrt(S2)) / (2*d)
 ```
-where `S1` and `S2` are the areas of the left and right eyes and `d` is the distance between the centers of the two eyes.
+where `S1` and `S2` are the areas of the left and right eyes, and `d` is the distance between the centers of the two eyes.
 
-We apply some preprocessing this ADR metric:
-- SG smoothing (using [Savitzky–Golay filter](https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter))
-- Baseline correction (by running a median filter and then subtracting it from the signal)
+The program applies some preprocessing to this ADR metric, including SG smoothing using the [Savitzky–Golay filter](https://en.wikipedia.org/wiki/Savitzky%E2%80%93Golay_filter), and baseline correction by running a median filter and then subtracting it from the signal.
 
-Then we run a peak finding algorithm to locate specific peaks. For this we use Scipy's `scipy.signal.find_peaks`
-function. The peak finding algorithm is controlled by parameters such as `prominence` and `peak_width`. 
-Using the parameter `peak_width` we will control filter out *super-fast eyeblinks* which occure in <100ms duration 
-as a result of noise in the data, as well as we filter out *super-long eyeblinks* 
-which can happen when one is drowsy and closes eyes for longer time (>500ms). Here is snapshot of the metrics and peak
+The program then runs a peak-finding algorithm to locate specific peaks using Scipy's `scipy.signal.find_peaks` function. The peak-finding algorithm is controlled by parameters such as prominence and peak_width. The peak_width parameter is used to filter out super-fast eyeblinks which occur in <100ms duration as a result of noise in the data, as well as filter out super-long eyeblinks that can happen when one is drowsy and closes their eyes for a longer time (>500ms). Here is snapshot of the metrics and peak
 detection in action (show if run with `-g` flag):
 ![graph](https://user-images.githubusercontent.com/34193118/79990247-7e3d8a80-84b9-11ea-875e-5af1ddf10bd8.png)
+
+
+# Acknowledgments
+This project is based on this tutorial by [Adrian Rosebrock](https://pyimagesearch.com/2017/04/24/eye-blink-detection-opencv-python-dlib/). We also thank the developers of the [dlib](http://dlib.net/) and [OpenCV](https://opencv.org/) libraries for providing excellent computer vision tools.
+
+
